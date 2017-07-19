@@ -1,3 +1,131 @@
-Main Aim:
-Modelling the tectonic state of stress within an alpine forelandbasin in a temperature and strain rate sensitive way. 
-The Model is in thermal equilibrium to a regional wide distributed temperature gradient of 3°/100 m.
+
+Project description:
+
+  Modelling the tectonic state of stress within an alpine foreland basin in a temperature and strain rate sensitive way. 
+  The Model is in thermal equilibrium to a regional wide distributed temperature gradient of 3°/100 m.
+  A displacement boundary is applied from the north whereby the southern/ bottom boundary is fixed and the top boundary 
+  is free on a homogenious manner. Over the whole model gravity load is applied to set up the vertical stress during
+  a so called "prestressing" step.
+---------------------------------------------------------------------------------------------------------------------------
+Material definition:
+  Redback material to integrate initial energy variables.
+  - gr (Grunfest number)
+  - ar (Arrhenius number)
+  - alpha_ 1 & _2 (Activation Volume)
+  - delta (Kamenetskii coefficient)
+  - ref_lewis_nb (Reference Lewis Number)
+  - pressurization coefficient (Pressurization coefficient Lambda)
+  - *phi0 (Initial Porosity)
+  - *Kc (Equilibrium Constant)
+  - *eta1 (Ratio of concentrations)
+  - *mu (Chemical Presurization Coefficient)
+  - *Aphi (Volume change from chemistry to porosity)
+  - solid_thermal_expansion (Thermal expansion coefficient)
+  +temperature_reference (Reference temperature for Thermal expansion) -> must be  set up if expansion is applied?
+  - solid_density (Solid Density)
+  - solid_compressibility (solid compressibility beta^s)
+  +pressure_reference (Reference pressure for compressibility) -> must be  set up if compressibitly is applied?
+  -> * Only for chemical modelling; + must be added
+ ------------------------------------------------------------------------ 
+  Redback Drucker-Prager material to define the mechanical feedback
+  - yield_stress (Yield Stress - Tensor)
+  - slope_yield_surface (slope of the yield function after yielding)
+  - youngs_modulus (Elasticity modulus)
+  - exponent
+  - poisson_ratio
+  ------------------------------------------------------------------------
+  IC-Random Material Distribution
+    [./IC_Youngs_Quartear]
+    block = '1'
+    variable = youngs_modulus
+    type = FunctionNormalDistributionIC
+    standard_deviation = 1e6
+    maximum = 15e6
+    minimum = 5e6
+    mean = 10e6
+  [../]
+ -----------------------------------------------------------------------------------------------------------------------------
+ Physical Kernals:
+  - temp_diff -> RedbackThermalDiffusion
+  - temp_dissip -> RedbackMechDissipation
+  - td_temp -> TimeDerivative
+  - temp_conv -> RedbackThermalConvection
+------------------------------------------------------------------------------------------------------------------------------
+ Temperature Definition:
+  For the temperature definition we use a constant temp. boundary depending on the geoth. gradient at the model boundaries. 
+  Inside of the model the temperature is assigned by an Initial condition, depending on the geoth. temp gradient.
+  BC: type - FunctionDiricletBC
+      function - init_gradient_T
+      applied on the boundary side
+  IC: type - FunctionIC
+      function - init_gradient_T
+  -------------------------------
+  Function:
+    [./init_gradient_T]
+    type = ParsedFunction
+    value = 'T_max + (y-y_min)*(T_min-T_max)/(y_max-y_min)'
+    vals = '-6500            0          0          30000          10           208           0.2'
+    vars = 'y_min y_max x_min x_max  T_min T_max amplitude'
+-----------------------------------------------------------------------------------------------------------------------------
+Gravity Definition:
+  To apply gravity we first have to define a time window where only temperature and gravity is working on the model. Here a
+  tanh-function is running where the gravity value is ramped to a constant value of 9.81 in y-direction. During this time the 
+  vertical stress is equilibrated and only then horizontal deformation can be applied.
+  To do so, a vector function is set up in dependence to time ('gravity_ramp'). 
+      type = ParsedVectorFunction
+      value_x = 0
+      value_y = -9.81*tanh(0.001*t*t)
+      value_z = 0
+  This function is called within the material as 'init_from_functions__function_names' -> function name 
+  and loading the parameter from 'init_from_functions__params' -> gravity.
+  To stabilize the model the non-linear absolute tolerance ('nl_abs_tol') in the executioner is set to a value of 1e-2.
+---------------------------------------------------------------------------------------------------------------------------
+Deformation Definition:
+  After stabilizing the initial 'pre-stessing' step a displacement boundary from the southern side is applied. Here we use a 
+  tanh-function that starts after a time of 20.
+  'time_linear_increase'
+    type = ParsedFunction
+    value = 'if(t<20, 0, 0.001*tanh((t-20)*0.1)*(t-20))' # Deformation rate of 1 mm/a ~ 0.001 m/a
+  Over time we can model the deformation history in a tectonic deformation scenario.
+---------------------------------------------------------------------------------------------------------------------------
+Time Stepping & Execututioner
+  To optimally increase and decrease the time steps we used a ReturnmapIterDT' timestepper. Here a post postprocessor ('max_returnmap_iter')
+  must be selectet to optimally increase time steps depending on the problem.
+  
+  
+  TIME STEPPING:
+  Postprocessor
+  [./max_returnmap_iter]
+    type = ElementExtremeValue
+    variable = returnmap_iter
+  [../]
+  [./TimeStepper]
+    type = ReturnMapIterDT
+    dt = 1e-9
+    min_iter = 10
+    ratio = 0.7
+    max_iter = 20
+    dt_max = 1000
+    postprocessor = max_returnmap_iter
+    dt_min = 1e-12
+  [../]
+-----------------------------------------------------------------------------------------------------------------------------
+Evaluate Residuals
+ For optimize the problem all residuals should be in the same order. This postprocessors ('evaluations','active_time') enable 
+ to show the residuals for every time step.
+ 
+   [./evaluations]           # Cumulative residual calculations for simulation
+    type = NumResidualEvaluations
+  [../]
+  [./active_time]           # Time computer spent on simulation
+    type = RunTime
+    time_type = active
+  [../]
+  
+  [Debug]
+  show_var_residual_norms = true
+  []
+ ------------------------------------------------------------------------------------------------------------------------------
+ Outputs
+  
+ 
