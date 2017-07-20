@@ -1,0 +1,30 @@
+Here I present the workflow how to integrate temperature boundary condition as a constant point value.
+
+1.) The Boundary Point must be integrated as a new extra nodeset over the MeshModifiers
+    [MeshModifiers]
+      [./Injektionsknoten]
+        type = AddExtraNodeset
+        new_boundary = 'Injection_point'
+        nodes = 3843
+        #coord = 11492.970586133257 -2906.857142857144 0
+      [../]
+    []
+2.) An Injection function must be written, where tinj is the time injection starts,temp0 is the initial 
+    temperature at the point and tempinj is the injection temperature.
+    [./injectionTemp]
+      type = ParsedFunction
+      value = 'if(t<tinj, temp0, (temp0-(temp0-tempinj)*tanh((t-tinj)*(t-tinj)*0.00001)))'
+      vals = '20 149.3 60'
+      vars = 'tinj temp0 tempinj'
+    [../]
+3.) Over a point boundary the injection temp function must be applied.
+    [./InjectionTemp]
+      type = FunctionPresetBC
+      variable = temp
+      boundary = Injection_point #hierfür ist ein meshmodifier nötig
+      function = injectionTemp
+    [../]
+    
+ Info: 
+ Due to high impact of the locally changed temperature - Thermal expansion coefficent or grunfest number must 
+ be adapted for thermal changed parameters. Mesh is highly chenged - need of a locally adaptive mesh?
