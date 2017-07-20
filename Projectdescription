@@ -66,6 +66,8 @@ Material definition:
     value = 'T_max + (y-y_min)*(T_min-T_max)/(y_max-y_min)'
     vals = '-6500            0          0          30000          10           208           0.2'
     vars = 'y_min y_max x_min x_max  T_min T_max amplitude'
+  --------------------------------
+  Enhancing the convergation we scale the temperature variable by 10^-6 in the varable block. 
 -----------------------------------------------------------------------------------------------------------------------------
 Gravity Definition:
   To apply gravity we first have to define a time window where only temperature and gravity is working on the model. Here a
