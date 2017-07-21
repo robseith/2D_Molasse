@@ -26,5 +26,5 @@ Here I present the workflow how to integrate temperature boundary condition as a
     [../]
     
  Info: 
- Due to high impact of the locally changed temperature - Thermal expansion coefficent or grunfest number must 
+ Due to high impact of the locally changed temperature - Thermal expansion coefficent (now in the order of 10^-5 -> Ok) or grunfest number must 
  be adapted for thermal changed parameters. Mesh is highly chenged - need of a locally adaptive mesh?
