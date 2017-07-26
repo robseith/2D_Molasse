@@ -31,7 +31,7 @@ Material definition:
   - yield_stress (Yield Stress - Tensor)
   - slope_yield_surface (slope of the yield function after yielding)
   - youngs_modulus (Elasticity modulus)
-  - exponent
+  - exponent - increase indirect the hardening of the yield curve (1 - low; 2 - high)
   - poisson_ratio
   ------------------------------------------------------------------------
   IC-Random Material Distribution
