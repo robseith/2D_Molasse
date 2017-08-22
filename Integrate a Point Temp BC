@@ -10,7 +10,7 @@ Here I present the workflow how to integrate temperature boundary condition as a
       [../]
     []
     I think by starting a .msh file the nodes will be renamed so you cannot have direct access to the node numbers on the mesh file,
-    even the koordinated are not running well. By try and error you can find the injection node. Florian said that for exodus-files 
+    even the coordinate are not running well. By try and error you can find the injection node. Florian said that for exodus-files 
     from Mesh-It he can exptact the coordinate in paraview.
 2.) An Injection function must be written, where tinj is the time injection starts,temp0 is the initial 
     temperature at the point and tempinj is the injection temperature.
