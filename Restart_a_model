@@ -1,3 +1,41 @@
 Here, I describe the settings to restart a initial model
 
-Setting up an Initial Model starts at negative time and end up at t=0. From this time the "Injection" scenario can be done.
+1.) Setting up an Initial Model starts at negative time and end up at t=0. From this time the "Injection" scenario can be done.
+  Changed Parameters:
+  Displacement function - 
+  [./time_linear_increase]
+    type = ParsedFunction
+    value = 'if((t0+t)<20, 0, rate*tanh((t0+t)*0.1)*(t0+t))'
+    vals = '0.001 40000'
+    vars = 'rate t0' # Deformation rate of 1 mm/a ~ 0.001 m/a
+  [../]
+  Gravity Ramp - 
+    [./gravity_ramp]
+    type = ParsedVectorFunction
+    value_x = 0
+    value_y = -9.81*tanh(0.001*(t0+t)*(t0+t))
+    value_z = 0
+    vals = '40000'
+    vars = 't0'
+  [../]
+  
+  Export:
+  We choose the way to load a .xda-file format at a new folder. In this folder all data will be written. Also the checkpoints must be exported.
+  [Outputs]
+  file_base = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init
+  output_initial = true
+  exodus = true
+  #csv = true
+  xda = true
+  checkpoint = true
+  [./console]
+    type = Console
+    perf_log = true
+    output_linear = true
+    file_base = simulation
+  [../]
+  []
+  2.) Loading the .xda-data 
+  First a mesh-file have to be defined
+  
+  
