@@ -20,7 +20,8 @@ Here, I describe the settings to restart a initial model
   [../]
   
   Export:
-  We choose the way to load a .xda-file format at a new folder. In this folder all data will be written. Also the checkpoints must be exported.
+  We choose the way to load a .xda-file format at a new folder. In this folder 
+  all data will be written. Also the checkpoints must be exported.
   [Outputs]
   file_base = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init
   output_initial = true
@@ -36,6 +37,53 @@ Here, I describe the settings to restart a initial model
   [../]
   []
   2.) Loading the .xda-data 
-  First a mesh-file have to be defined
+  First a mesh-file have to be defined in the mesh opttions: 
+  [Mesh]
+  type = FileMesh
+  file = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init_cp/0050_mesh.cpr
+  []
+  
+  For loading the variables (disp_x, disp_y, disp_z) we use a 'userobject':
+  [UserObjects]
+  [./ex_disp_x_soln]
+    type = SolutionUserObject
+    system_variables = disp_x
+    mesh = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init_0050_mesh.xda
+    es = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init_0050.xda
+  [../]
+  [./ex_disp_y_soln]
+    type = SolutionUserObject
+    system_variables = disp_y
+    mesh = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init_0050_mesh.xda
+    es = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init_0050.xda
+  [../]
+  [./ex_disp_z_soln]
+    type = SolutionUserObject
+    system_variables = disp_z
+    mesh = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init_0050_mesh.xda
+    es = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init_0050.xda
+  [../]
+[]
+
+That these user_objects can be used a 'SolutionFunction' have to be defined.
+  [./equilibrated_disp_x_func]
+    type = SolutionFunction
+    solution = ex_disp_x_soln
+  [../]
+  [./equilibrated_disp_y_func]
+    type = SolutionFunction
+    solution = ex_disp_y_soln
+  [../]
+  
+  The Displacement of the initial model run are fixed to the BCs over the solution-function 
+  at Top, Bottom, left and right side on the x / y direction
+    [./hold_left_x]
+    type = FunctionDirichletBC
+    variable = disp_x
+    boundary = 1
+    function = equilibrated_disp_x_func
+  [../]
+  
+  
   
   
