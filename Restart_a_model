@@ -1,7 +1,8 @@
-Here, I describe the settings to restart a initial model
+Here, I describe the settings to restart an initial model
 
-1.) Setting up an Initial Model starts at negative time and end up at t=0. From this time the "Injection" scenario can be done.
-  Changed Parameters:
+1.) Setting up an initial model starts at negative time (here - 40 000) and end up at t=0. From this time the "Injection"
+scenario can beginn.
+Changed Functions due to changed start time:
   Displacement function - 
   [./time_linear_increase]
     type = ParsedFunction
@@ -20,8 +21,8 @@ Here, I describe the settings to restart a initial model
   [../]
   
   Export:
-  We choose the way to load a .xda-file format at a new folder. In this folder 
-  all data will be written. Also the checkpoints must be exported.
+  We choose the way to load a .xda-file format from a new folder (.../LF_Output_Init). In this folder 
+  all data will be written. As the mesh- file will be load in the checkpoint (.cpr-file), checkpoints must also be exported.
   [Outputs]
   file_base = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init
   output_initial = true
@@ -36,9 +37,12 @@ Here, I describe the settings to restart a initial model
     file_base = simulation
   [../]
   []
+  
+  
   2.) Loading the .xda-data 
-  First a mesh-file have to be defined in the mesh opttions: 
-  [Mesh]
+  First a mesh-file have to be defined in the mesh options: 
+ 
+ [Mesh]
   type = FileMesh
   file = Layered_Fault_M40_Y140_F5_Y20/LF_Output_Init_cp/0050_mesh.cpr
   []
