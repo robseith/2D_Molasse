@@ -1,0 +1,11 @@
+For integration of the inj- temp. bc we see a waveform of the temperatur not as assumed 
+a constant temperatur decrease.
+
+- Mesh sensitivity of the mesh?
+
+-> initial refined mesh at the injection location.
+-> adaptive refined mesh at the injection location in dependence of the local temperature gradient.
+-------------------------------------------------------------------------------------------------------
+
+Initial mesh refinement is not running with the reloading process, adaptive mesh refinement is also 
+not running up to now.
