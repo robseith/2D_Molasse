@@ -10,7 +10,8 @@ Here I present the workflow how to integrate temperature boundary condition as a
       [../]
     []
     I think by starting a .msh file the nodes will be renamed so you cannot have direct access to the node numbers on the mesh file,
-    even the coordinate are not running well. By try and error you can find the injection node. Florian said that for exodus-files 
+    even the coordinate are not running well.One way to solve it, to load an exodus solution file and look with the inspector at 
+    the nodes for node number. To get the coodinate you can open the mesh.xda-file and search for the first coordinate digits. By try and error you can find the injection node. Florian said that for exodus-files 
     from Mesh-It he can exptact the coordinate in paraview.
 2.) An Injection function must be written, where tinj is the time injection starts,temp0 is the initial 
     temperature at the point and tempinj is the injection temperature.
@@ -31,3 +32,8 @@ Here I present the workflow how to integrate temperature boundary condition as a
  Info: 
  Due to high impact of the locally changed temperature - Thermal expansion coefficent (now in the order of 10^-5 -> Ok) or grunfest number must 
  be adapted for thermal changed parameters. Mesh is highly chenged - need of a locally adaptive mesh?
+ -> Temp. highly modify the displacement/ stress / peeq - a suitable Grunfest-Number and moddeling time have to be chosen that 
+ Temperature conduction canbe observed.
+ -> for a better solution we have to think about the mesh adaptivity function or local mesh refinements. 
+ ------------------------------------- Both checked but not running up to now!----------------------------------------------------
+ 
