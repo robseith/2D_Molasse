@@ -69,7 +69,7 @@ Changed Functions due to changed start time:
   [../]
 []
 
-That these user_objects can be used a 'SolutionFunction' have to be defined.
+That these user_objects can be used as a Boundary Condition a 'SolutionFunction' have to be defined.
   [./equilibrated_disp_x_func]
     type = SolutionFunction
     solution = ex_disp_x_soln
@@ -80,7 +80,7 @@ That these user_objects can be used a 'SolutionFunction' have to be defined.
   [../]
   
   The Displacement of the initial model run are fixed to the BCs over the solution-function 
-  at Top, Bottom, left and right side on the x / y direction
+  at top, bottom, left and right side on the x / y direction
     [./hold_left_x]
     type = FunctionDirichletBC
     variable = disp_x
@@ -88,6 +88,6 @@ That these user_objects can be used a 'SolutionFunction' have to be defined.
     function = equilibrated_disp_x_func
   [../]
   
-  
-  
+  So most simple loading of a model is defined and for example a new modeling scenario can be defined - 
+  In my case a injection scenario.
   
