@@ -50,6 +50,11 @@ Material definition:
   - temp_dissip -> RedbackMechDissipation
   - td_temp -> TimeDerivative
   - temp_conv -> RedbackThermalConvection
+  - td_press -> TimeDerivative
+  - press_conv -> RedbackMassConvection
+  - press_diff -> RedbackMassDiffusion
+  - PoroMech -> RedbackPoromechanics
+  - press_thermPress -> RedbackThermalPressurization
 ------------------------------------------------------------------------------------------------------------------------------
  Temperature Definition:
   For the temperature definition we use a constant temp. boundary depending on the geoth. gradient at the model boundaries. 
