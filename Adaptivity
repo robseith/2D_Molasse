@@ -9,3 +9,7 @@ a constant temperatur decrease.
 
 Initial mesh refinement is not running with the reloading process, adaptive mesh refinement is also 
 not running up to now.
+
+For numerical issue the mesh at the injection point must be fine enough ~ 0.1 - 0.3 m.
+To reach this resolution we have to remesh the initial mesh to a mesh size  of 5-10 m, so that after 5 initial 
+remeshing the mesh size is 0.15 -0.3 m which is enougth to integrate a wellbore with a injection temperature.
